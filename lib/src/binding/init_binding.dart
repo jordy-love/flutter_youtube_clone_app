@@ -5,7 +5,7 @@ import 'package:youtube_clone_app2/src/repository/youtube_repository.dart';
 class InitBinding implements Bindings {
   @override
   void dependencies() {
-    Get.put(YoutubeRepository(), permanent: true);
+    Get.put(YoutubeRepository(), permanent: true); //영구적 사용
     Get.put(AppController());
   }
 }
