@@ -1,20 +1,47 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:youtube_clone_app2/src/controller/video_controller.dart';
 import 'package:youtube_clone_app2/src/models/video.dart';
 import 'package:intl/intl.dart';
 
-class VideoWidget extends StatelessWidget {
+class VideoWidget extends StatefulWidget {
   final Video video;
-
   const VideoWidget({Key key, this.video}) : super(key: key);
 
+  @override
+  _VideoWidgetState createState() => _VideoWidgetState();
+}
+
+class _VideoWidgetState extends State<VideoWidget> {
+   VideoController _videoController;
+
+  @override
+  void initState() {
+    _videoController = Get.put(
+        VideoController(video: widget.video),
+        tag: widget.video.id.videoId);
+    super.initState();
+  }
+
   Widget _thumbnail() {
-    return Container(
-      height: 250,
-      color: Colors.grey.withOpacity(0.5),
-      child: Image.network(
-        video.snippet.thumbnails.medium.url,
-        fit: BoxFit.fitWidth,
-      ),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Container(
+          color: Colors.grey.withOpacity(0.5),
+          child: CachedNetworkImage(imageUrl: widget.video.snippet.thumbnails.medium.url,
+          placeholder: (context, url) => Container(
+            height: 230,
+            child: Center(child: CircularProgressIndicator()),
+          ),
+          fit: BoxFit.fitWidth,),
+          // child: Image.network(
+          //   widget.video.snippet.thumbnails.medium.url,
+          //   fit: BoxFit.fitWidth,
+          // ),
+        ),
+      ],
     );
   }
 
@@ -23,13 +50,14 @@ class VideoWidget extends StatelessWidget {
       padding: const EdgeInsets.only(left: 10, bottom: 20),
       child: Row(
         children: [
+          Obx(() =>
           CircleAvatar(
             radius: 30,
             backgroundColor: Colors.grey.withOpacity(0.5),
             backgroundImage:
-                Image.network("https://pbs.twimg.com/media/EE5QkSsVAAAFgmh.jpg")
+                Image.network(_videoController.youtuberThumbnailUrl)
                     .image,
-          ),
+          ),),
           SizedBox(
             width: 15,
           ),
@@ -41,7 +69,7 @@ class VideoWidget extends StatelessWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      video.snippet.title,
+                      widget.video.snippet.title,
                       maxLines: 2,
                     ),
                   ),
@@ -57,24 +85,26 @@ class VideoWidget extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    video.snippet.channelTitle,
+                    widget.video.snippet.channelTitle,
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.black.withOpacity(0.8),
                     ),
                   ),
                   Text(" · "),
-                  Text(
-                    "조회수 1000",
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.black.withOpacity(0.6),
+                  Obx(
+                    () => Text(
+                      _videoController.viewCountString,
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.black.withOpacity(0.6),
+                      ),
                     ),
                   ),
                   Text(" · "),
                   Text(
                     DateFormat("yyyy-MM-dd")
-                        .format(video.snippet.publishTime),
+                        .format(widget.video.snippet.publishTime),
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.black.withOpacity(0.6),
