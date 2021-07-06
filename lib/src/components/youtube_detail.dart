@@ -1,8 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:youtube_clone_app2/src/controller/youtube_detail_controller.dart';
+import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 
-class YoutubeDetail extends StatelessWidget {
+class YoutubeDetail extends GetView<YoutubeDetailController> {
   const YoutubeDetail({Key key}) : super(key: key);
 
   Widget _titleZone() {
@@ -12,16 +15,16 @@ class YoutubeDetail extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
-            "유튜브 영상 다시보기",
+            controller.title,
             style: TextStyle(fontSize: 15),
           ),
           Row(
             children: [
-              Text("조회수 1000회",
+              Text("조회수 ${controller.viewCount}회",
                   style: TextStyle(
                       fontSize: 13, color: Colors.black.withOpacity(0.5))),
               Text(" · "),
-              Text("2021-06-25",
+              Text(controller.publishedTime,
                   style: TextStyle(
                       fontSize: 13, color: Colors.black.withOpacity(0.5))),
             ],
@@ -35,7 +38,7 @@ class YoutubeDetail extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
       child: Text(
-        "유튜브 클론코딩 예제입니다!",
+        controller.description,
         style: TextStyle(fontSize: 14),
       ),
     );
@@ -59,8 +62,8 @@ class YoutubeDetail extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        _buttonOne("like", "1000"),
-        _buttonOne("dislike", "0"),
+        _buttonOne("like", controller.likeCount),
+        _buttonOne("dislike", controller.dislikeCount),
         _buttonOne("share", "공유"),
         _buttonOne("save", "저장")
       ],
@@ -76,7 +79,7 @@ class YoutubeDetail extends StatelessWidget {
             radius: 30,
             backgroundColor: Colors.grey.withOpacity(0.5),
             backgroundImage:
-                Image.network("https://pbs.twimg.com/media/EE5QkSsVAAAFgmh.jpg")
+                Image.network(controller.youtuberThumbnail)
                     .image,
           ),
           SizedBox(width: 15,),
@@ -85,11 +88,11 @@ class YoutubeDetail extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Text(
-                  "개발하는남자",
+                  controller.youtuberName,
                   style: TextStyle(fontSize: 18),
                 ),
                 Text(
-                  "구독자 10000",
+                  "구독자 ${controller.youtuberSubsCount}",
                   style: TextStyle(
                       fontSize: 14, color: Colors.black.withOpacity(0.6)),
                 ),
@@ -123,13 +126,44 @@ class YoutubeDetail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(),
       body: Column(
         children: [
-          Container(
-            height: 250,
-            color: Colors.grey.withOpacity(0.5),
+          YoutubePlayer(
+            controller: controller.playerController,
+            showVideoProgressIndicator: true,
+            progressIndicatorColor: Colors.blueAccent,
+            topActions: <Widget>[
+              const SizedBox(width: 8.0),
+              Expanded(
+                child: Text(
+                  controller.playerController.metadata.title,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18.0,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
+                ),
+              ),
+              IconButton(
+                icon: const Icon(
+                  Icons.settings,
+                  color: Colors.white,
+                  size: 25.0,
+                ),
+                onPressed: () {
+                },
+              ),
+            ],
+            onReady: () {
+
+            },
+            onEnded: (data) {
+
+            },
           ),
           Expanded(
             child: _description(),
