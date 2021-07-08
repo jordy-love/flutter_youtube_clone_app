@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:youtube_clone_app2/src/components/CustomAppBar.dart';
+import 'package:youtube_clone_app2/src/components/custom_appbar.dart';
 import 'package:youtube_clone_app2/src/components/video_widget.dart';
 import 'package:youtube_clone_app2/src/controller/home_controller.dart';
 

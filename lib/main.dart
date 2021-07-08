@@ -5,6 +5,8 @@ import 'package:get/get_navigation/get_navigation.dart';
 import 'package:youtube_clone_app2/src/binding/init_binding.dart';
 import 'package:youtube_clone_app2/src/app.dart';
 import 'package:youtube_clone_app2/src/controller/youtube_detail_controller.dart';
+import 'package:youtube_clone_app2/src/controller/youtube_search_controller.dart';
+import 'package:youtube_clone_app2/src/pages/search.dart';
 
 import 'src/components/youtube_detail.dart';
 
@@ -33,6 +35,12 @@ class MyApp extends StatelessWidget {
             page: () => YoutubeDetail(),
             binding: BindingsBuilder(() => Get.lazyPut<YoutubeDetailController>(
                 () => YoutubeDetailController())
+            )),
+        GetPage(
+            name: "/search",
+            page: () => YoutubeSearch(),
+            binding: BindingsBuilder(() => Get.lazyPut<YoutubeSearchController>(
+                    () => YoutubeSearchController())
             )),
       ],
     );
